@@ -27,6 +27,7 @@ app.get('/', (req, res) => res.send('hello'))
 if(process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
+console.log(process.env.NODE_ENV)
 
 const PORT = process.env.PORT || 5000
 
