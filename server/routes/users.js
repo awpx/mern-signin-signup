@@ -3,6 +3,24 @@ const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const moment = require('moment')
+const { auth } = require('../middleware/auth')
+
+//@desc       Auth user
+//@route      POST /api/v1/users/auth
+//@access     private
+router.get('/auth', auth, (req, res) => {
+  res.status(200).json({
+    _id: req.user._id,
+    // 0 = admin(true)
+    isAdmin: req.user.role === 0 ? false : true,
+    isAuth: true,
+    email: req.user.email,
+    name: req.user.name,
+    lastname: req.user.lastname,
+    role: req.user.role,
+    image: req.user.image,
+  })
+})
 
 //@desc       Register new user
 //@route      POST /api/v1/users/register
@@ -72,7 +90,7 @@ router.post('/login', async (req, res) => {
   })
 
   //save token &exp date to cookies
-  res.cookie("w_authExp", user.tokenExp)
+  res.cookie("x_authExp", user.tokenExp)
 
   res.cookie('x_auth', user.token)
     .status(200)
