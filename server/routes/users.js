@@ -100,4 +100,26 @@ router.post('/login', async (req, res) => {
 
 })
 
+//@desc       Logout user
+//@route      GET /api/v1/users/logout
+//@access     private
+router.get('/logout', auth, async (req, res) => {
+  //delete token
+  const user = await User.findOneAndUpdate(
+    { _id: req.user._id },
+    { token: '', tokenExp: '' }
+  )
+  if(!user)
+  return res.status(500).json({
+    success: false
+  })
+
+  res.cookie("x_authExp", null)
+  res.cookie('x_auth', null)
+
+  return res.status(200).send({
+    success: true
+    })
+})
+
 module.exports = router
