@@ -11,7 +11,7 @@ const { auth } = require('../middleware/auth')
 router.get('/auth', auth, (req, res) => {
   res.status(200).json({
     _id: req.user._id,
-    // 0 = admin(true)
+    // 0/default = admin(true)
     isAdmin: req.user.role === 0 ? false : true,
     isAuth: true,
     email: req.user.email,
@@ -26,7 +26,11 @@ router.get('/auth', auth, (req, res) => {
 //@route      POST /api/v1/users/register
 //@access     private
 router.post('/register', async (req, res) => {
-  try {  
+  try {
+    //check email arleardy used/register
+    const emailExist = await User.findOne({ email: req.body.email })
+    if (emailExist) return res.status(400).send('Email already registered')
+
     const savedUser = await User.create(req.body)
 
     return res.status(201).json({

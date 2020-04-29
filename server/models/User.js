@@ -7,14 +7,17 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     maxlength: 50,
+    required: true
   },
   email: {
     type: String,
     trim: true,
+    required: true,
     unique: 1,
   },
   password: {
     type: String,
+    required: true,
     minlength: 8
   },
   lastName: {
@@ -36,7 +39,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre('save', async function(next) {
   var user = this
-  
+
   if(user.isModified('password')) {
     try {
       const salt = await bcrypt.genSalt(saltRounds)
